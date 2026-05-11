@@ -48,14 +48,14 @@ a {
   position: fixed;
   inset: 0;
   z-index: 30;
-  display: grid;
-  place-items: center;
+  display: block;
   overflow: hidden;
-  padding: 24px;
+  padding: 0;
   background:
-    radial-gradient(circle at 50% 62%, rgba(245, 76, 146, 0.24), transparent 36%),
-    radial-gradient(circle at 50% 45%, rgba(255, 166, 204, 0.12), transparent 22%),
-    linear-gradient(180deg, #030304 0%, #09070d 55%, #130a15 100%);
+    radial-gradient(circle at 50% 42%, rgba(255, 66, 132, 0.16), transparent 30%),
+    radial-gradient(circle at 24% 24%, rgba(255, 184, 104, 0.06), transparent 22%),
+    radial-gradient(circle at 78% 20%, rgba(255, 135, 190, 0.05), transparent 24%),
+    linear-gradient(180deg, #030204 0%, #07040a 52%, #10070d 100%);
   color: #fffaf5;
   transition: opacity 800ms ease, visibility 800ms ease;
 }
@@ -66,8 +66,9 @@ a {
   z-index: 2;
   content: "";
   background:
-    radial-gradient(circle at 50% 45%, rgba(255, 152, 196, 0.06) 0%, rgba(3, 3, 4, 0.2) 42%, rgba(3, 3, 4, 0.72) 100%),
-    linear-gradient(180deg, rgba(3, 3, 4, 0.04), rgba(3, 3, 4, 0.42));
+    radial-gradient(circle at 50% 42%, transparent 0 23%, rgba(2, 2, 4, 0.26) 52%, rgba(2, 2, 4, 0.88) 80%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.58));
+  opacity: 0.9;
   pointer-events: none;
 }
 
@@ -77,11 +78,25 @@ a {
 }
 
 .cover-inner {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  bottom: clamp(28px, 8vh, 70px);
   z-index: 3;
-  width: min(100%, 720px);
+  width: min(92vw, 760px);
   text-align: center;
-  transform: translateY(24vh);
+  transform: translateX(-50%);
+}
+
+.cover-inner h1 {
+  margin-top: 16px;
+  font-size: clamp(28px, 4.8vw, 50px);
+  text-shadow:
+    0 0 18px rgba(255, 91, 145, 0.32),
+    0 12px 30px rgba(255, 91, 145, 0.28);
+}
+
+.cover-inner .gift-button {
+  margin-top: 10px;
 }
 
 .soft-label {
@@ -123,10 +138,11 @@ h3 {
 }
 
 .cover-copy {
-  margin: 22px auto 34px;
+  display: none;
+  margin: 0 auto 22px;
   max-width: 520px;
-  color: rgba(255, 250, 245, 0.72);
-  font-size: 16px;
+  color: rgba(255, 250, 245, 0.68);
+  font-size: 15px;
 }
 
 .gift-button,
@@ -139,10 +155,12 @@ h3 {
   border: 0;
   border-radius: 999px;
   padding: 0 22px;
-  background: linear-gradient(135deg, var(--rose), var(--gold));
+  background: linear-gradient(135deg, #e93478, #f4a45f);
   color: #ffffff;
   font-weight: 900;
-  box-shadow: 0 12px 26px rgba(239, 93, 143, 0.32);
+  box-shadow:
+    0 0 14px rgba(255, 83, 150, 0.28),
+    0 14px 34px rgba(239, 93, 143, 0.28);
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
@@ -189,11 +207,9 @@ h3 {
   inset: 0;
   z-index: 0;
   content: "";
-  background-image:
-    radial-gradient(circle, rgba(255, 255, 255, 0.95) 1px, transparent 1.5px),
-    radial-gradient(circle, rgba(246, 199, 107, 0.85) 1px, transparent 1.5px);
-  background-position: 0 0, 42px 72px;
-  background-size: 120px 120px, 160px 160px;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.42) 1px, transparent 1.5px);
+  background-position: 0 0;
+  background-size: 110px 110px;
   animation: twinkle 6s ease-in-out infinite alternate;
 }
 
@@ -204,7 +220,7 @@ h3 {
   width: 100%;
   height: 100%;
   opacity: 1;
-  filter: drop-shadow(0 0 28px rgba(255, 143, 179, 0.46));
+  filter: saturate(115%) contrast(104%);
 }
 
 .stars::before {
@@ -258,11 +274,77 @@ h3 {
   place-items: center;
   margin-bottom: 24px;
   border-radius: 50%;
-  background: #ffffff;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.9), rgba(255, 240, 246, 0.88) 52%, rgba(255, 220, 232, 0.92) 100%);
   color: var(--rose);
   font-size: clamp(42px, 9vw, 76px);
   font-weight: 900;
-  box-shadow: var(--shadow);
+  box-shadow:
+    0 0 0 1px rgba(255, 166, 197, 0.26) inset,
+    0 18px 42px rgba(91, 47, 72, 0.12);
+  overflow: visible;
+  position: relative;
+}
+
+.countdown.heart-bloom {
+  background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.82), rgba(255, 236, 245, 0.92) 46%, rgba(255, 214, 228, 0.92) 100%);
+}
+
+.bloom-heart {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: var(--color);
+  font-size: 1.05em;
+  transform:
+    translate(-50%, -50%)
+    translate(var(--dx), var(--dy))
+    rotate(var(--rot))
+    scale(0.2);
+  opacity: 0;
+  animation: bloom-pop 820ms cubic-bezier(0.2, 1.3, 0.32, 1) forwards;
+  animation-delay: var(--delay);
+  text-shadow: 0 0 10px rgba(255, 120, 165, 0.35);
+}
+
+.bloom-center {
+  font-size: 1.45em;
+}
+
+.bloom-top,
+.bloom-bottom,
+.bloom-left,
+.bloom-right,
+.bloom-top-left,
+.bloom-top-right {
+  font-size: 1.02em;
+}
+
+@keyframes bloom-pop {
+  0% {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      translate(var(--dx), var(--dy))
+      rotate(var(--rot))
+      scale(0.18);
+  }
+  35% {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%)
+      translate(calc(var(--dx) * 0.7), calc(var(--dy) * 0.7))
+      rotate(var(--rot))
+      scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform:
+      translate(-50%, -50%)
+      translate(var(--dx), var(--dy))
+      rotate(var(--rot))
+      scale(1);
+  }
 }
 
 .love-timer {
@@ -339,6 +421,7 @@ h3 {
   transform: translateX(-50%);
   box-shadow: 0 18px 40px rgba(123, 74, 80, 0.26);
   animation: tree-grow 1.2s ease-out both;
+  z-index: 1;
 }
 
 .tree-branch {
@@ -351,6 +434,7 @@ h3 {
   transform-origin: left center;
   opacity: 0;
   animation: branch-grow 900ms ease-out both;
+  z-index: 2;
 }
 
 .branch-one {
@@ -386,6 +470,7 @@ h3 {
   transform: translate(-50%, -50%) scale(0) rotate(var(--rotate));
   animation: heart-bloom 900ms cubic-bezier(0.2, 1.5, 0.36, 1) forwards, heart-sway 4s ease-in-out infinite;
   animation-delay: var(--delay), calc(var(--delay) + 900ms);
+  z-index: 3;
 }
 
 .tree-heart::before,
@@ -410,21 +495,21 @@ h3 {
   transform: rotate(45deg);
 }
 
-.h1 { --size: 52px; --delay: 1.1s; --rotate: -10deg; --heart-color: #ff8fb3; left: 50%; top: 74px; }
-.h2 { --size: 62px; --delay: 1.18s; --rotate: 8deg; --heart-color: #ef5d8f; left: 43%; top: 112px; }
-.h3 { --size: 48px; --delay: 1.26s; --rotate: -18deg; --heart-color: #f6c76b; left: 58%; top: 116px; }
-.h4 { --size: 74px; --delay: 1.34s; --rotate: 12deg; --heart-color: #ff6fa2; left: 34%; top: 168px; }
-.h5 { --size: 68px; --delay: 1.42s; --rotate: -8deg; --heart-color: #bca8ff; left: 66%; top: 172px; }
-.h6 { --size: 58px; --delay: 1.5s; --rotate: 18deg; --heart-color: #ff8fb3; left: 50%; top: 174px; }
-.h7 { --size: 86px; --delay: 1.58s; --rotate: -14deg; --heart-color: #ef5d8f; left: 27%; top: 246px; }
-.h8 { --size: 78px; --delay: 1.66s; --rotate: 16deg; --heart-color: #ffb7cc; left: 72%; top: 246px; }
-.h9 { --size: 84px; --delay: 1.74s; --rotate: 0deg; --heart-color: #f6c76b; left: 50%; top: 236px; }
-.h10 { --size: 52px; --delay: 1.82s; --rotate: 24deg; --heart-color: #7bd8c4; left: 18%; top: 196px; }
-.h11 { --size: 54px; --delay: 1.9s; --rotate: -22deg; --heart-color: #bca8ff; left: 82%; top: 198px; }
-.h12 { --size: 64px; --delay: 1.98s; --rotate: 7deg; --heart-color: #ff8fb3; left: 35%; top: 308px; }
-.h13 { --size: 66px; --delay: 2.06s; --rotate: -11deg; --heart-color: #ef5d8f; left: 63%; top: 308px; }
-.h14 { --size: 46px; --delay: 2.14s; --rotate: 18deg; --heart-color: #fff7ef; left: 50%; top: 316px; }
-.h15 { --size: 42px; --delay: 2.22s; --rotate: -18deg; --heart-color: #f6c76b; left: 75%; top: 118px; }
+.h1 { --size: 54px; --delay: 1.1s; --rotate: -10deg; --heart-color: #ff8fb3; left: 50%; top: 42px; }
+.h2 { --size: 62px; --delay: 1.18s; --rotate: 8deg; --heart-color: #ef5d8f; left: 42%; top: 82px; }
+.h3 { --size: 50px; --delay: 1.26s; --rotate: -18deg; --heart-color: #f6c76b; left: 59%; top: 84px; }
+.h4 { --size: 76px; --delay: 1.34s; --rotate: 12deg; --heart-color: #ff6fa2; left: 31%; top: 138px; }
+.h5 { --size: 70px; --delay: 1.42s; --rotate: -8deg; --heart-color: #bca8ff; left: 69%; top: 140px; }
+.h6 { --size: 60px; --delay: 1.5s; --rotate: 18deg; --heart-color: #ff8fb3; left: 50%; top: 138px; }
+.h7 { --size: 82px; --delay: 1.58s; --rotate: -14deg; --heart-color: #ef5d8f; left: 26%; top: 204px; }
+.h8 { --size: 76px; --delay: 1.66s; --rotate: 16deg; --heart-color: #ffb7cc; left: 74%; top: 204px; }
+.h9 { --size: 82px; --delay: 1.74s; --rotate: 0deg; --heart-color: #f6c76b; left: 50%; top: 198px; }
+.h10 { --size: 52px; --delay: 1.82s; --rotate: 24deg; --heart-color: #7bd8c4; left: 17%; top: 166px; }
+.h11 { --size: 54px; --delay: 1.9s; --rotate: -22deg; --heart-color: #bca8ff; left: 83%; top: 168px; }
+.h12 { --size: 60px; --delay: 1.98s; --rotate: 7deg; --heart-color: #ff8fb3; left: 36%; top: 258px; }
+.h13 { --size: 62px; --delay: 2.06s; --rotate: -11deg; --heart-color: #ef5d8f; left: 64%; top: 258px; }
+.h14 { --size: 46px; --delay: 2.14s; --rotate: 18deg; --heart-color: #fff7ef; left: 50%; top: 270px; }
+.h15 { --size: 44px; --delay: 2.22s; --rotate: -18deg; --heart-color: #f6c76b; left: 76%; top: 84px; }
 
 .tree-ground {
   position: absolute;
@@ -663,6 +748,31 @@ h3 {
   animation: petal-fall linear forwards;
 }
 
+.heart-rain-heart {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  color: var(--color);
+  font-size: var(--size);
+  line-height: 1;
+  opacity: 0;
+  text-shadow: 0 0 10px rgba(255, 143, 179, 0.42);
+  animation: heart-rain var(--duration) ease-in forwards;
+  animation-delay: var(--delay);
+  will-change: transform, opacity;
+}
+
+.heart-rain-heart::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.55), transparent 66%);
+  opacity: 0.18;
+  filter: blur(2px);
+  z-index: -1;
+}
+
 .fireworks {
   position: fixed;
   inset: 0;
@@ -797,6 +907,23 @@ h3 {
   }
 }
 
+@keyframes heart-rain {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -12vh, 0) rotate(0deg) scale(0.55);
+  }
+  12% {
+    opacity: 1;
+  }
+  48% {
+    transform: translate3d(calc(var(--drift) * 0.46), 47vh, 0) rotate(150deg) scale(1.08);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift), 110vh, 0) rotate(var(--spin)) scale(0.84);
+  }
+}
+
 @media (max-width: 860px) {
   .hero {
     grid-template-columns: 1fr;
@@ -805,13 +932,13 @@ h3 {
   }
 
   .love-tree-scene {
-    min-height: 330px;
+    min-height: 420px;
   }
 
   .heart-tree {
     width: min(92vw, 360px);
-    height: 390px;
-    transform: translateY(0) scale(0.86);
+    height: 430px;
+    transform: translateY(0) scale(0.9);
   }
 
   .memory-list {
@@ -830,7 +957,7 @@ h3 {
   }
 
   h1 {
-    font-size: 44px;
+    font-size: 40px;
   }
 
   .primary-link,

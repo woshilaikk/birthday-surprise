@@ -32,27 +32,54 @@ const romanticSong = new Audio("assets/music/faded.mp3");
 romanticSong.loop = true;
 romanticSong.preload = "auto";
 
-const spiralParticles = Array.from({ length: 1200 }, (_, index) => {
-  const t = (index / 1200) * (Math.PI * 2) * 10;
+function heartCurve(t) {
   return {
-    angle: t,
-    ring: 24 + (index % 120) * 2.6 + Math.random() * 6,
-    depth: Math.random(),
-    speed: 0.0024 + Math.random() * 0.0028,
-    size: 1.1 + Math.random() * 2.8,
-    drift: (Math.random() - 0.5) * 0.34,
-    tint: ["#ff8fb3", "#ff6fa2", "#ffc4d8", "#f15b97"][index % 4]
+    x: 16 * Math.sin(t) ** 3,
+    y: -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))
+  };
+}
+
+const vortexPetals = Array.from({ length: 1800 }, (_, index) => {
+  const t = (index / 1800) * Math.PI * 2;
+  const point = heartCurve(t);
+  const depth = Math.random();
+  return {
+    t,
+    x: point.x,
+    y: point.y,
+    depth,
+    offset: Math.random() * Math.PI * 2,
+    lane: 0.72 + Math.random() * 0.5,
+    size: 3 + Math.random() * 8,
+    speed: 0.0014 + Math.random() * 0.0028,
+    spin: Math.random() * Math.PI * 2,
+    color: ["#ff4f86", "#ff74a5", "#ff9abd", "#ffd0dc", "#e94073"][index % 5]
   };
 });
 
-const fallingParticles = Array.from({ length: 360 }, () => ({
+const starDust = Array.from({ length: 520 }, () => ({
   x: Math.random(),
   y: Math.random(),
-  z: 0.2 + Math.random() * 0.8,
-  speed: 0.0006 + Math.random() * 0.0014,
-  sway: Math.random() * Math.PI * 2,
-  size: 0.8 + Math.random() * 2.4
+  z: 0.3 + Math.random() * 1.2,
+  size: 0.5 + Math.random() * 1.7,
+  speed: 0.0008 + Math.random() * 0.0018,
+  alpha: 0.12 + Math.random() * 0.42,
+  spin: Math.random() * Math.PI * 2,
+  color: ["#ff8fb3", "#ffc4d8", "#ff6f9f", "#ffdce6"][Math.floor(Math.random() * 4)]
 }));
+
+const codeLines = [
+  "love",
+  "love",
+  "love",
+  "love",
+  "love",
+  "love",
+  "love",
+  "love",
+  "love",
+  "love"
+];
 
 const letter = `亲爱的宝贝：
 
@@ -76,6 +103,7 @@ function openSurprise() {
 
 function runCountdown() {
   let value = 3;
+  countdown.classList.remove("heart-bloom");
   countdown.textContent = value;
   const timer = setInterval(() => {
     value -= 1;
@@ -84,10 +112,23 @@ function runCountdown() {
       return;
     }
     clearInterval(timer);
-    countdown.textContent = "盛开";
+    showHeartBloom();
     heroTitle.textContent = "和宝宝在一起的时间";
     typeLetter();
   }, 900);
+}
+
+function showHeartBloom() {
+  countdown.classList.add("heart-bloom");
+  countdown.innerHTML = `
+    <span class="bloom-heart bloom-center" style="--dx:0px; --dy:0px; --delay:0ms; --rot:0deg; --color:#fff5f8;">❤</span>
+    <span class="bloom-heart bloom-top" style="--dx:0px; --dy:-20px; --delay:70ms; --rot:-8deg; --color:#ff6f9f;">❤</span>
+    <span class="bloom-heart bloom-right" style="--dx:18px; --dy:-2px; --delay:120ms; --rot:12deg; --color:#ff8db7;">❤</span>
+    <span class="bloom-heart bloom-bottom" style="--dx:2px; --dy:20px; --delay:170ms; --rot:4deg; --color:#ffd0df;">❤</span>
+    <span class="bloom-heart bloom-left" style="--dx:-18px; --dy:-2px; --delay:140ms; --rot:-14deg; --color:#ff4f86;">❤</span>
+    <span class="bloom-heart bloom-top-left" style="--dx:-14px; --dy:-16px; --delay:90ms; --rot:-20deg; --color:#ffb3c7;">❤</span>
+    <span class="bloom-heart bloom-top-right" style="--dx:14px; --dy:-16px; --delay:90ms; --rot:16deg; --color:#ffb15e;">❤</span>
+  `;
 }
 
 function updateLoveTimer() {
@@ -134,6 +175,27 @@ function launchPetals(amount) {
   }
 }
 
+function launchHeartRain(amount) {
+  const colors = ["#ff4f86", "#ff6fa3", "#ff9bc0", "#ffd0df", "#ff86b2"];
+
+  for (let i = 0; i < amount; i += 1) {
+    const heart = document.createElement("span");
+    heart.className = "heart-rain-heart";
+    heart.textContent = "❤";
+    heart.style.left = `${Math.random() * 100}vw`;
+    heart.style.setProperty("--size", `${10 + Math.random() * 18}px`);
+    heart.style.setProperty("--duration", `${5.5 + Math.random() * 4.5}s`);
+    heart.style.setProperty("--delay", `${Math.random() * 2.2}s`);
+    heart.style.setProperty("--drift", `${-120 + Math.random() * 240}px`);
+    heart.style.setProperty("--spin", `${-170 + Math.random() * 340}deg`);
+    heart.style.setProperty("--color", colors[Math.floor(Math.random() * colors.length)]);
+    petalLayer.appendChild(heart);
+
+    const lifetime = (5.5 + Math.random() * 4.5 + 2.6) * 1000;
+    setTimeout(() => heart.remove(), lifetime);
+  }
+}
+
 function resizeCanvas(canvas, context) {
   canvas.width = window.innerWidth * window.devicePixelRatio;
   canvas.height = window.innerHeight * window.devicePixelRatio;
@@ -165,74 +227,75 @@ function animateHeartTunnel() {
   const height = window.innerHeight;
   const centerX = width / 2;
   const centerY = height * 0.42;
+  const unit = Math.min(width, height) * 0.023;
 
-  tunnelCtx.clearRect(0, 0, width, height);
+  tunnelCtx.globalCompositeOperation = "source-over";
+  tunnelCtx.fillStyle = "rgba(5, 6, 10, 0.34)";
+  tunnelCtx.fillRect(0, 0, width, height);
   tunnelTime += 1;
 
-  const pulse = 1 + Math.sin(tunnelTime * 0.03) * 0.06;
+  const pulse = 1 + Math.sin(tunnelTime * 0.025) * 0.035;
 
-  for (let ring = 0; ring < 7; ring += 1) {
-    const progress = ((tunnelTime * 0.0045 + ring / 7) % 1);
-    const radiusX = progress * width * 0.42 + 20;
-    const radiusY = progress * height * 0.28 + 16;
-    tunnelCtx.globalAlpha = (1 - progress) * 0.2;
-    tunnelCtx.strokeStyle = ring % 2 ? "#ff8fb3" : "#ff6fa2";
-    tunnelCtx.lineWidth = 0.9;
-    tunnelCtx.beginPath();
-    tunnelCtx.ellipse(centerX, centerY, radiusX * pulse, radiusY * pulse, tunnelTime * 0.0016, 0, Math.PI * 2);
-    tunnelCtx.stroke();
+  tunnelCtx.save();
+  tunnelCtx.globalAlpha = 0.13;
+  tunnelCtx.fillStyle = "#cfd4dc";
+  tunnelCtx.font = `${Math.max(10, Math.min(14, width * 0.014))}px Consolas, monospace`;
+  for (let col = 0; col < Math.ceil(width / 170); col += 1) {
+    codeLines.forEach((line, row) => {
+      const x = col * 170 + 18;
+      const y = ((row * 22 + tunnelTime * 0.18 + col * 37) % (height + 160)) - 80;
+      tunnelCtx.fillText(line, x, y);
+    });
   }
+  tunnelCtx.restore();
 
-  spiralParticles.forEach((p) => {
-    p.depth += p.speed;
-    if (p.depth > 1) {
-      p.depth = 0;
-      p.angle += Math.PI * 2 * Math.random();
+  starDust.forEach((star) => {
+    star.y += star.speed;
+    star.spin += 0.01;
+    if (star.y > 1.05) {
+      star.y = -0.05;
+      star.x = Math.random();
     }
-
-    const eased = p.depth * p.depth;
-    const spin = p.angle + tunnelTime * (0.012 + p.drift);
-    const swirlX = Math.cos(spin) * (p.ring + eased * width * 0.28);
-    const swirlY = Math.sin(spin * 1.06) * (p.ring * 0.62 + eased * height * 0.24);
-    const x = centerX + swirlX;
-    const y = centerY + swirlY;
-    const size = p.size + eased * 5.4;
-    const alpha = Math.max(0.06, 1 - eased * 0.64);
-    drawHeart(tunnelCtx, x, y, size, spin * 0.62, p.tint, alpha);
+    drawHeart(tunnelCtx, star.x * width, star.y * height, star.size * star.z * 2.2, star.spin, star.color, star.alpha);
   });
 
-  fallingParticles.forEach((p) => {
-    p.y += p.speed * (1.2 + p.z);
-    p.x += Math.sin(tunnelTime * 0.01 + p.sway) * 0.0004;
-    if (p.y > 1.04) {
-      p.y = -0.04;
-      p.x = Math.random();
-    }
-    const x = p.x * width;
-    const y = p.y * height;
-    const alpha = 0.18 + p.z * 0.42;
-    tunnelCtx.globalAlpha = alpha;
-    tunnelCtx.fillStyle = "#ffc4d8";
-    tunnelCtx.beginPath();
-    tunnelCtx.arc(x, y, p.size * p.z, 0, Math.PI * 2);
-    tunnelCtx.fill();
+  tunnelCtx.save();
+  tunnelCtx.globalCompositeOperation = "lighter";
+
+  vortexPetals.forEach((petal) => {
+    petal.depth += petal.speed;
+    petal.spin += 0.011;
+    if (petal.depth > 1) petal.depth = 0;
+
+    const flowT = petal.t + tunnelTime * 0.0018 + petal.offset * 0.08;
+    const flowed = heartCurve(flowT);
+    const layer = 0.86 + Math.sin(petal.depth * Math.PI) * 0.16;
+    const spread = petal.lane * layer * pulse;
+    const naturalDriftX = Math.sin(tunnelTime * 0.01 + petal.offset) * 3.6;
+    const naturalDriftY = Math.cos(tunnelTime * 0.008 + petal.offset) * 2.8;
+    const x = centerX + flowed.x * unit * spread + naturalDriftX;
+    const y = centerY + flowed.y * unit * spread * 0.82 + naturalDriftY;
+    const alpha = 0.22 + Math.sin(petal.depth * Math.PI) * 0.48;
+    const size = petal.size * (0.42 + Math.sin(petal.depth * Math.PI) * 0.5);
+
+    drawHeart(tunnelCtx, x, y, size, petal.spin, petal.color, alpha);
   });
 
-  tunnelCtx.globalAlpha = 0.72;
   const halo = tunnelCtx.createRadialGradient(centerX, centerY, 0, centerX, centerY, Math.min(width, height) * 0.18);
-  halo.addColorStop(0, "rgba(255, 220, 235, 0.85)");
-  halo.addColorStop(0.26, "rgba(255, 120, 175, 0.44)");
-  halo.addColorStop(0.72, "rgba(255, 92, 160, 0.08)");
+  halo.addColorStop(0, "rgba(255, 236, 245, 0.46)");
+  halo.addColorStop(0.1, "rgba(255, 115, 165, 0.28)");
+  halo.addColorStop(0.38, "rgba(255, 74, 132, 0.08)");
   halo.addColorStop(1, "rgba(255, 92, 160, 0)");
   tunnelCtx.fillStyle = halo;
+  tunnelCtx.globalAlpha = 0.72;
   tunnelCtx.beginPath();
-  tunnelCtx.arc(centerX, centerY, Math.min(width, height) * 0.2, 0, Math.PI * 2);
+  tunnelCtx.arc(centerX, centerY, Math.min(width, height) * 0.18, 0, Math.PI * 2);
   tunnelCtx.fill();
 
-  tunnelCtx.globalAlpha = 1;
-  drawHeart(tunnelCtx, centerX, centerY + 4, 36 + pulse * 8, Math.sin(tunnelTime * 0.03) * 0.25, "#ffd7e8", 0.85);
+  tunnelCtx.restore();
 
   tunnelCtx.globalAlpha = 1;
+  tunnelCtx.globalCompositeOperation = "source-over";
   requestAnimationFrame(animateHeartTunnel);
 }
 
@@ -335,7 +398,7 @@ closeNote.addEventListener("click", () => noteDialog.close());
 
 finalButton.addEventListener("click", () => {
   finalMessage.classList.add("show");
-  launchPetals(44);
+  launchHeartRain(88);
   createFirework(window.innerWidth * 0.28, window.innerHeight * 0.32);
   createFirework(window.innerWidth * 0.62, window.innerHeight * 0.25);
   createFirework(window.innerWidth * 0.48, window.innerHeight * 0.44);
