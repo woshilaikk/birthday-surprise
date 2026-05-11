@@ -12,13 +12,26 @@ const musicText = document.querySelector(".music-text");
 const noteDialog = document.querySelector("#noteDialog");
 const noteText = document.querySelector("#noteText");
 const closeNote = document.querySelector("#closeNote");
-const canvas = document.querySelector(".fireworks");
-const ctx = canvas.getContext("2d");
+const fireworksCanvas = document.querySelector(".fireworks");
+const fireworksCtx = fireworksCanvas.getContext("2d");
+const tunnelCanvas = document.querySelector(".heart-tunnel");
+const tunnelCtx = tunnelCanvas.getContext("2d");
 
 let audioContext;
 let musicTimer;
 let isMusicPlaying = false;
 let particles = [];
+let tunnelTime = 0;
+
+const tunnelHearts = Array.from({ length: 58 }, (_, index) => ({
+  angle: index * 0.68,
+  orbit: 34 + (index % 9) * 19,
+  depth: Math.random(),
+  size: 10 + Math.random() * 20,
+  speed: 0.0036 + Math.random() * 0.0042,
+  spin: Math.random() * Math.PI,
+  color: ["#ff8fb3", "#ef5d8f", "#f6c76b", "#bca8ff", "#fff7ef"][index % 5]
+}));
 
 const letter = `亲爱的宝贝：
 
@@ -49,7 +62,7 @@ function runCountdown() {
       return;
     }
     clearInterval(timer);
-    countdown.textContent = "❤";
+    countdown.textContent = "心动";
     heroTitle.textContent = "生日快乐，我最爱的女孩";
     typeLetter();
   }, 900);
@@ -79,10 +92,71 @@ function launchPetals(amount) {
   }
 }
 
-function resizeCanvas() {
+function resizeCanvas(canvas, context) {
   canvas.width = window.innerWidth * window.devicePixelRatio;
   canvas.height = window.innerHeight * window.devicePixelRatio;
-  ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+  context.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+}
+
+function resizeAllCanvases() {
+  resizeCanvas(fireworksCanvas, fireworksCtx);
+  resizeCanvas(tunnelCanvas, tunnelCtx);
+}
+
+function drawHeart(context, x, y, size, rotation, color, alpha) {
+  context.save();
+  context.translate(x, y);
+  context.rotate(rotation);
+  context.scale(size / 32, size / 32);
+  context.globalAlpha = alpha;
+  context.fillStyle = color;
+  context.beginPath();
+  context.moveTo(0, 10);
+  context.bezierCurveTo(-28, -12, -14, -34, 0, -18);
+  context.bezierCurveTo(14, -34, 28, -12, 0, 10);
+  context.fill();
+  context.restore();
+}
+
+function animateHeartTunnel() {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  const centerX = width / 2;
+  const centerY = height * 0.48;
+
+  tunnelCtx.clearRect(0, 0, width, height);
+  tunnelTime += 1;
+
+  for (let ring = 0; ring < 9; ring += 1) {
+    const progress = ((tunnelTime * 0.006 + ring / 9) % 1);
+    const radiusX = progress * width * 0.62 + 38;
+    const radiusY = progress * height * 0.38 + 28;
+    tunnelCtx.globalAlpha = (1 - progress) * 0.34;
+    tunnelCtx.strokeStyle = ring % 2 ? "#ff8fb3" : "#f6c76b";
+    tunnelCtx.lineWidth = 1.3;
+    tunnelCtx.beginPath();
+    tunnelCtx.ellipse(centerX, centerY, radiusX, radiusY, tunnelTime * 0.003, 0, Math.PI * 2);
+    tunnelCtx.stroke();
+  }
+
+  tunnelHearts.forEach((heart) => {
+    heart.depth += heart.speed;
+    if (heart.depth > 1) {
+      heart.depth = 0;
+      heart.angle += 1.1;
+    }
+
+    const eased = heart.depth * heart.depth;
+    const twist = tunnelTime * 0.018 + heart.angle;
+    const x = centerX + Math.cos(twist) * (heart.orbit + eased * width * 0.42);
+    const y = centerY + Math.sin(twist * 0.86) * (heart.orbit * 0.48 + eased * height * 0.28);
+    const size = heart.size * (0.42 + eased * 2.9);
+    const alpha = Math.max(0.08, 1 - eased * 0.72);
+    drawHeart(tunnelCtx, x, y, size, heart.spin + tunnelTime * 0.012, heart.color, alpha);
+  });
+
+  tunnelCtx.globalAlpha = 1;
+  requestAnimationFrame(animateHeartTunnel);
 }
 
 function createFirework(x, y) {
@@ -102,20 +176,20 @@ function createFirework(x, y) {
 }
 
 function animateFireworks() {
-  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  fireworksCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
   particles = particles.filter((particle) => particle.life > 0);
   particles.forEach((particle) => {
     particle.x += particle.vx;
     particle.y += particle.vy;
     particle.vy += 0.035;
     particle.life -= 1;
-    ctx.globalAlpha = particle.life / 70;
-    ctx.fillStyle = particle.color;
-    ctx.beginPath();
-    ctx.arc(particle.x, particle.y, 2.4, 0, Math.PI * 2);
-    ctx.fill();
+    fireworksCtx.globalAlpha = particle.life / 70;
+    fireworksCtx.fillStyle = particle.color;
+    fireworksCtx.beginPath();
+    fireworksCtx.arc(particle.x, particle.y, 2.4, 0, Math.PI * 2);
+    fireworksCtx.fill();
   });
-  ctx.globalAlpha = 1;
+  fireworksCtx.globalAlpha = 1;
   requestAnimationFrame(animateFireworks);
 }
 
@@ -191,7 +265,8 @@ const observer = new IntersectionObserver(
 );
 
 document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
-window.addEventListener("resize", resizeCanvas);
+window.addEventListener("resize", resizeAllCanvases);
 
-resizeCanvas();
+resizeAllCanvases();
+animateHeartTunnel();
 animateFireworks();
