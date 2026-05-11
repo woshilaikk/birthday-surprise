@@ -22,6 +22,13 @@
         <p class="soft-label">A LITTLE SURPRISE</p>
         <h1>穿过满屏心动，来见你</h1>
         <p class="cover-copy">请找一个安静的地方，戴上耳机，然后轻轻打开这份礼物。</p>
+        <div class="secret-gate" aria-label="专属暗号">
+          <label for="secretAnswer">早上第一句话是什么呢？</label>
+          <div class="secret-row">
+            <input id="secretAnswer" type="text" autocomplete="off" placeholder="输入专属暗号" />
+            <span class="secret-hint" id="secretHint">答对才可以打开礼物</span>
+          </div>
+        </div>
         <button class="gift-button" type="button" id="openGift">
           <span class="gift-box" aria-hidden="true">
             <span class="gift-lid"></span>
@@ -59,6 +66,7 @@
               <span>秒</span>
             </div>
           </div>
+          <p class="love-promise" id="lovePromise">从 2025.01.09 开始，我已经喜欢你这么久啦。</p>
           <a class="primary-link" href="#letter">去收下我的告白</a>
         </div>
         <div class="love-tree-scene" aria-label="爱心树盛开动画">
@@ -86,6 +94,7 @@
             <span class="tree-heart h15"></span>
             <div class="tree-ground"></div>
           </div>
+          <div class="tree-secret" id="treeSecret" aria-live="polite">你发现隐藏彩蛋啦：我每天都比昨天更喜欢你一点。</div>
         </div>
       </section>
 
@@ -95,20 +104,30 @@
           <h2>一些我想一直收藏的瞬间</h2>
         </div>
         <div class="memory-list">
-          <article class="memory-card reveal">
-            <span>第一次心动</span>
-            <h3>你笑起来的时候，世界忽然亮了一点</h3>
-            <p>也许那天并没有发生什么惊天动地的事，但我记得自己偷偷开心了很久。</p>
+          <article class="memory-card reveal bright-memory-card" id="brightMemoryCard">
+            <span>心动</span>
+            <h3 id="brightMemoryTrigger" tabindex="0" role="button" aria-label="点亮这句话">每次你笑起来的时候，世界就忽然亮了一点</h3>
+            <p>我的心好像也多跳了一拍。</p>
           </article>
-          <article class="memory-card reveal">
+          <article class="memory-card reveal daily-memory-card" id="dailyMemoryCard">
             <span>平凡日常</span>
-            <h3>和你一起浪费时间，也很值得</h3>
+            <h3 id="dailyMemoryTrigger" tabindex="0" role="button" aria-label="打开这张日常照片">和你一起浪费时间，也很值得</h3>
             <p>吃饭、散步、聊天、发呆，那些普通时刻，因为有你，都变成了纪念日。</p>
+            <img class="daily-memory-photo" src="assets/photos/memory-daily.jpg" alt="你坐在红色电话亭旁的照片" loading="lazy" />
           </article>
-          <article class="memory-card reveal">
+          <article class="memory-card reveal future-memory-card" id="futureMemoryCard">
             <span>未来预告</span>
-            <h3>我还想陪你过很多很多生日</h3>
+            <h3 id="futureMemoryTrigger" tabindex="0" role="button" aria-label="打开下次生日倒计时">我还想陪你过很多很多生日</h3>
             <p>新的一岁，愿你被爱、被珍惜、被温柔以待。而我，会继续认真地喜欢你。</p>
+            <div class="future-countdown" id="futureCountdown" aria-label="距离下次生日倒计时">
+              <p class="future-flow-text">距离下次生日，还有</p>
+              <div class="future-time-grid">
+                <span><strong id="nextBirthdayDays">0</strong>天</span>
+                <span><strong id="nextBirthdayHours">0</strong>小时</span>
+                <span><strong id="nextBirthdayMinutes">0</strong>分钟</span>
+                <span><strong id="nextBirthdaySeconds">0</strong>秒</span>
+              </div>
+            </div>
           </article>
         </div>
       </section>
@@ -148,6 +167,7 @@
           <p class="soft-label">LOVE LETTER</p>
           <h2>写给今天的你</h2>
           <p class="typed-text" id="typedText"></p>
+          <p class="letter-signature">一直喜欢你的我</p>
         </div>
       </section>
 
@@ -155,17 +175,27 @@
         <div class="final-card reveal">
           <p class="soft-label">FINAL SURPRISE</p>
           <h2>领取最后一个惊喜</h2>
-          <p>点一下，整片星光都替我祝你生日快乐。</p>
+          <p id="wishText">先在心里许一个愿望，然后我替你把这片星光点亮。</p>
           <button class="primary-link final-button" type="button" id="finalButton">点亮惊喜</button>
           <div class="final-message" id="finalMessage">
             <strong>生日快乐宝宝</strong>
             <span>愿你的每一岁都自由、明亮、被爱包围。也愿我每一年都在你身边。（ps：不知道你有没有发现小彩蛋呢）</span>
+            <em>下一站，我还想陪你去看海、看花、看很多很多日落。</em>
+            <div class="wish-stars" id="wishStars" aria-label="愿望星星"></div>
+            <div class="birthday-card locked" id="birthdayCard" aria-label="隐藏祝福卡">
+              <span></span>
+              <strong></strong>
+              <p></p>
+              <small></small>
+            </div>
           </div>
         </div>
       </section>
     </main>
 
     <dialog class="note-dialog" id="noteDialog">
+      <span class="note-pin" aria-hidden="true"></span>
+      <p class="note-kicker">偷偷写给这张照片</p>
       <p id="noteText"></p>
       <button type="button" id="closeNote">收下这句</button>
     </dialog>

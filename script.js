@@ -1,15 +1,35 @@
 const cover = document.querySelector("#cover");
 const page = document.querySelector("#page");
 const openGift = document.querySelector("#openGift");
+const secretGate = document.querySelector(".secret-gate");
+const secretAnswer = document.querySelector("#secretAnswer");
+const secretHint = document.querySelector("#secretHint");
 const countdown = document.querySelector("#countdown");
 const heroTitle = document.querySelector("#heroTitle");
 const daysTogether = document.querySelector("#daysTogether");
 const hoursTogether = document.querySelector("#hoursTogether");
 const minutesTogether = document.querySelector("#minutesTogether");
 const secondsTogether = document.querySelector("#secondsTogether");
+const lovePromise = document.querySelector("#lovePromise");
 const typedText = document.querySelector("#typedText");
 const finalButton = document.querySelector("#finalButton");
 const finalMessage = document.querySelector("#finalMessage");
+const wishText = document.querySelector("#wishText");
+const wishStars = document.querySelector("#wishStars");
+const birthdayCard = document.querySelector("#birthdayCard");
+const heartTree = document.querySelector(".heart-tree");
+const treeSecret = document.querySelector("#treeSecret");
+const photoWall = document.querySelector("#photoWall");
+const brightMemoryCard = document.querySelector("#brightMemoryCard");
+const brightMemoryTrigger = document.querySelector("#brightMemoryTrigger");
+const dailyMemoryCard = document.querySelector("#dailyMemoryCard");
+const dailyMemoryTrigger = document.querySelector("#dailyMemoryTrigger");
+const futureMemoryCard = document.querySelector("#futureMemoryCard");
+const futureMemoryTrigger = document.querySelector("#futureMemoryTrigger");
+const nextBirthdayDays = document.querySelector("#nextBirthdayDays");
+const nextBirthdayHours = document.querySelector("#nextBirthdayHours");
+const nextBirthdayMinutes = document.querySelector("#nextBirthdayMinutes");
+const nextBirthdaySeconds = document.querySelector("#nextBirthdaySeconds");
 const petalLayer = document.querySelector(".petal-layer");
 const musicButton = document.querySelector(".music-button");
 const musicText = document.querySelector(".music-text");
@@ -27,7 +47,15 @@ let isMusicPlaying = false;
 let particles = [];
 let tunnelTime = 0;
 let loveTimerId;
+let treeTapCount = 0;
+let finalWishStep = 0;
+let wishStarsShown = false;
+let surpriseOpening = false;
+let nextBirthdayTimerId;
+const viewedPhotos = new Set();
+const collectedWishes = new Set();
 const loveStart = new Date(2025, 0, 9, 0, 0, 0).getTime();
+const nextBirthday = new Date(2027, 4, 4, 0, 0, 0).getTime();
 const romanticSong = new Audio("assets/music/faded.mp3");
 romanticSong.loop = true;
 romanticSong.preload = "auto";
@@ -81,6 +109,14 @@ const codeLines = [
   "love"
 ];
 
+const wishMessages = [
+  "愿你永远被偏爱，也永远有选择自己的勇气。",
+  "愿新的一岁，所有温柔都刚好落在你身上。",
+  "愿我能陪你把普通日子过成很多很多纪念日。",
+  "愿你想要的快乐，都慢慢走到你身边。",
+  "愿每一次看海、看花、看日落，我都在你旁边。"
+];
+
 const letter = `亲爱的宝贝：
 
 生日快乐。
@@ -92,13 +128,30 @@ const letter = `亲爱的宝贝：
 而我，会继续认真地喜欢你，陪你吃很多顿饭，走很多段路，看很多次日落，过很多很多个生日。`;
 
 function openSurprise() {
-  cover.classList.add("opened");
-  page.classList.add("visible");
-  page.setAttribute("aria-hidden", "false");
-  launchPetals(36);
-  runCountdown();
-  startLoveTimer();
-  setTimeout(() => document.querySelector(".hero").scrollIntoView({ behavior: "smooth" }), 500);
+  if (surpriseOpening) return;
+  const answer = secretAnswer.value.trim().replace(/\s+/g, "");
+  if (answer !== "早安宝宝") {
+    secretHint.textContent = "暗号不对哦，再想想每天早上的第一句话。";
+    secretHint.classList.add("shake");
+    secretAnswer.focus();
+    setTimeout(() => secretHint.classList.remove("shake"), 420);
+    return;
+  }
+  surpriseOpening = true;
+  secretHint.textContent = "早安宝宝，今天也要被爱包围。";
+  secretGate.classList.add("unlocked");
+  openGift.classList.add("opening");
+  openGift.disabled = true;
+
+  setTimeout(() => {
+    cover.classList.add("opened");
+    page.classList.add("visible");
+    page.setAttribute("aria-hidden", "false");
+    launchPetals(36);
+    runCountdown();
+    startLoveTimer();
+    setTimeout(() => document.querySelector(".hero").scrollIntoView({ behavior: "smooth" }), 500);
+  }, 950);
 }
 
 function runCountdown() {
@@ -142,6 +195,7 @@ function updateLoveTimer() {
   hoursTogether.textContent = hours;
   minutesTogether.textContent = minutes;
   secondsTogether.textContent = seconds;
+  lovePromise.textContent = `从 2025.01.09 开始，我已经喜欢你 ${days} 天 ${hours} 小时 ${minutes} 分钟 ${seconds} 秒啦。`;
 }
 
 function startLoveTimer() {
@@ -151,14 +205,39 @@ function startLoveTimer() {
   }
 }
 
+function updateNextBirthdayTimer() {
+  const remaining = Math.max(0, Math.floor((nextBirthday - Date.now()) / 1000));
+  const days = Math.floor(remaining / 86400);
+  const hours = Math.floor((remaining % 86400) / 3600);
+  const minutes = Math.floor((remaining % 3600) / 60);
+  const seconds = remaining % 60;
+
+  nextBirthdayDays.textContent = days;
+  nextBirthdayHours.textContent = hours;
+  nextBirthdayMinutes.textContent = minutes;
+  nextBirthdaySeconds.textContent = seconds;
+}
+
+function startNextBirthdayTimer() {
+  updateNextBirthdayTimer();
+  if (!nextBirthdayTimerId) {
+    nextBirthdayTimerId = setInterval(updateNextBirthdayTimer, 1000);
+  }
+}
+
 function typeLetter() {
   if (typedText.dataset.done) return;
   typedText.dataset.done = "true";
+  typedText.classList.add("typing");
   let index = 0;
   const timer = setInterval(() => {
     typedText.textContent = letter.slice(0, index);
     index += 1;
-    if (index > letter.length) clearInterval(timer);
+    if (index > letter.length) {
+      clearInterval(timer);
+      typedText.classList.remove("typing");
+      document.querySelector(".letter-signature").classList.add("show");
+    }
   }, 52);
 }
 
@@ -196,6 +275,41 @@ function launchHeartRain(amount) {
   }
 }
 
+function showWishStars() {
+  if (wishStarsShown) return;
+  wishStarsShown = true;
+  wishStars.innerHTML = "";
+
+  wishMessages.forEach((message, index) => {
+    const star = document.createElement("button");
+    star.className = "wish-star";
+    star.type = "button";
+    star.textContent = "★";
+    star.style.setProperty("--delay", `${index * 130}ms`);
+    star.dataset.message = message;
+    star.dataset.index = String(index);
+    star.setAttribute("aria-label", message);
+    star.addEventListener("click", () => {
+      star.classList.add("collected");
+      collectedWishes.add(index);
+      wishText.textContent = message;
+      launchHeartRain(12);
+      if (collectedWishes.size === wishMessages.length) {
+        birthdayCard.classList.remove("locked");
+        birthdayCard.classList.add("unlocked");
+        birthdayCard.innerHTML = `
+          <span>Hidden Wish</span>
+          <strong>宝宝你的愿望我听见啦</strong>
+          <p>我也在心里祝你一臂之力。</p>
+          <small>以后每一年，我都想认真祝你生日快乐</small>
+        `;
+        launchHeartRain(36);
+      }
+    });
+    wishStars.appendChild(star);
+  });
+}
+
 function resizeCanvas(canvas, context) {
   canvas.width = window.innerWidth * window.devicePixelRatio;
   canvas.height = window.innerHeight * window.devicePixelRatio;
@@ -226,8 +340,9 @@ function animateHeartTunnel() {
   const width = window.innerWidth;
   const height = window.innerHeight;
   const centerX = width / 2;
-  const centerY = height * 0.42;
-  const unit = Math.min(width, height) * 0.023;
+  const isPhone = width <= 520;
+  const centerY = height * (isPhone ? 0.36 : 0.42);
+  const unit = Math.min(width, height) * (isPhone ? 0.019 : 0.023);
 
   tunnelCtx.globalCompositeOperation = "source-over";
   tunnelCtx.fillStyle = "rgba(5, 6, 10, 0.34)";
@@ -269,27 +384,27 @@ function animateHeartTunnel() {
 
     const flowT = petal.t + tunnelTime * 0.0018 + petal.offset * 0.08;
     const flowed = heartCurve(flowT);
-    const layer = 0.86 + Math.sin(petal.depth * Math.PI) * 0.16;
+    const layer = (isPhone ? 0.76 : 0.86) + Math.sin(petal.depth * Math.PI) * (isPhone ? 0.12 : 0.16);
     const spread = petal.lane * layer * pulse;
-    const naturalDriftX = Math.sin(tunnelTime * 0.01 + petal.offset) * 3.6;
-    const naturalDriftY = Math.cos(tunnelTime * 0.008 + petal.offset) * 2.8;
+    const naturalDriftX = Math.sin(tunnelTime * 0.01 + petal.offset) * (isPhone ? 2.4 : 3.6);
+    const naturalDriftY = Math.cos(tunnelTime * 0.008 + petal.offset) * (isPhone ? 1.8 : 2.8);
     const x = centerX + flowed.x * unit * spread + naturalDriftX;
     const y = centerY + flowed.y * unit * spread * 0.82 + naturalDriftY;
-    const alpha = 0.22 + Math.sin(petal.depth * Math.PI) * 0.48;
-    const size = petal.size * (0.42 + Math.sin(petal.depth * Math.PI) * 0.5);
+    const alpha = (isPhone ? 0.18 : 0.22) + Math.sin(petal.depth * Math.PI) * (isPhone ? 0.42 : 0.48);
+    const size = petal.size * ((isPhone ? 0.34 : 0.42) + Math.sin(petal.depth * Math.PI) * (isPhone ? 0.42 : 0.5));
 
     drawHeart(tunnelCtx, x, y, size, petal.spin, petal.color, alpha);
   });
 
-  const halo = tunnelCtx.createRadialGradient(centerX, centerY, 0, centerX, centerY, Math.min(width, height) * 0.18);
-  halo.addColorStop(0, "rgba(255, 236, 245, 0.46)");
-  halo.addColorStop(0.1, "rgba(255, 115, 165, 0.28)");
-  halo.addColorStop(0.38, "rgba(255, 74, 132, 0.08)");
+  const halo = tunnelCtx.createRadialGradient(centerX, centerY, 0, centerX, centerY, Math.min(width, height) * (isPhone ? 0.135 : 0.18));
+  halo.addColorStop(0, "rgba(255, 246, 250, 0.58)");
+  halo.addColorStop(0.08, "rgba(255, 118, 169, 0.26)");
+  halo.addColorStop(0.34, "rgba(255, 74, 132, 0.07)");
   halo.addColorStop(1, "rgba(255, 92, 160, 0)");
   tunnelCtx.fillStyle = halo;
-  tunnelCtx.globalAlpha = 0.72;
+  tunnelCtx.globalAlpha = isPhone ? 0.58 : 0.72;
   tunnelCtx.beginPath();
-  tunnelCtx.arc(centerX, centerY, Math.min(width, height) * 0.18, 0, Math.PI * 2);
+  tunnelCtx.arc(centerX, centerY, Math.min(width, height) * (isPhone ? 0.135 : 0.18), 0, Math.PI * 2);
   tunnelCtx.fill();
 
   tunnelCtx.restore();
@@ -375,6 +490,9 @@ function stopSoftMusic() {
 }
 
 openGift.addEventListener("click", openSurprise);
+secretAnswer.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") openSurprise();
+});
 
 musicButton.addEventListener("click", () => {
   isMusicPlaying = !isMusicPlaying;
@@ -387,17 +505,87 @@ musicButton.addEventListener("click", () => {
   }
 });
 
-document.querySelectorAll(".photo-card").forEach((card) => {
+document.querySelectorAll(".photo-card").forEach((card, index) => {
   card.addEventListener("click", () => {
-    noteText.textContent = card.dataset.note;
-    noteDialog.showModal();
+    document.querySelectorAll(".photo-card.flipped").forEach((openCard) => {
+      if (openCard !== card) openCard.classList.remove("flipped");
+    });
+    card.classList.toggle("flipped");
+    viewedPhotos.add(index);
+    if (viewedPhotos.size === 5 && !photoWall.dataset.eggShown) {
+      photoWall.dataset.eggShown = "true";
+      noteText.textContent = "哈哈哈哈，宝宝我知道你会看完的，以后照片会越来越多的哦。";
+      setTimeout(() => noteDialog.showModal(), 450);
+    }
   });
 });
 
 closeNote.addEventListener("click", () => noteDialog.close());
 
+function brightenMemories() {
+  document.querySelector(".memories").classList.add("pink-memory");
+  brightMemoryCard.classList.add("lit");
+  launchHeartRain(18);
+}
+
+brightMemoryTrigger.addEventListener("click", brightenMemories);
+brightMemoryTrigger.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    brightenMemories();
+  }
+});
+
+function revealDailyMemory() {
+  dailyMemoryCard.classList.toggle("photo-open");
+  if (dailyMemoryCard.classList.contains("photo-open")) launchHeartRain(12);
+}
+
+dailyMemoryTrigger.addEventListener("click", revealDailyMemory);
+dailyMemoryTrigger.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    revealDailyMemory();
+  }
+});
+
+function revealFutureCountdown() {
+  futureMemoryCard.classList.toggle("time-open");
+  if (futureMemoryCard.classList.contains("time-open")) {
+    startNextBirthdayTimer();
+    launchHeartRain(12);
+  }
+}
+
+futureMemoryTrigger.addEventListener("click", revealFutureCountdown);
+futureMemoryTrigger.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    revealFutureCountdown();
+  }
+});
+
+heartTree.addEventListener("click", () => {
+  treeTapCount += 1;
+  if (treeTapCount < 3) return;
+  treeTapCount = 0;
+  treeSecret.classList.add("show");
+  launchHeartRain(22);
+  setTimeout(() => treeSecret.classList.remove("show"), 4200);
+});
+
 finalButton.addEventListener("click", () => {
+  if (finalWishStep === 0) {
+    finalWishStep = 1;
+    wishText.textContent = "闭上眼，在心里许愿。准备好了，就再点一次。";
+    finalButton.textContent = "我许好愿了";
+    launchHeartRain(18);
+    return;
+  }
   finalMessage.classList.add("show");
+  finalButton.textContent = "愿望已点亮";
+  finalButton.disabled = true;
+  showWishStars();
   launchHeartRain(88);
   createFirework(window.innerWidth * 0.28, window.innerHeight * 0.32);
   createFirework(window.innerWidth * 0.62, window.innerHeight * 0.25);
