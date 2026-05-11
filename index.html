@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>给你的生日惊喜</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="petal-layer" aria-hidden="true"></div>
+    <canvas class="fireworks" aria-hidden="true"></canvas>
+
+    <button class="music-button" type="button" aria-label="播放或暂停音乐">
+      <span class="music-icon" aria-hidden="true">♪</span>
+      <span class="music-text">播放音乐</span>
+    </button>
+
+    <section class="cover" id="cover">
+      <div class="stars" aria-hidden="true"></div>
+      <div class="cover-inner">
+        <p class="soft-label">A LITTLE SURPRISE</p>
+        <h1>今天有一份只属于你的惊喜</h1>
+        <p class="cover-copy">先深呼吸一下，然后轻轻打开它。</p>
+        <button class="gift-button" type="button" id="openGift">
+          <span class="gift-box" aria-hidden="true">
+            <span class="gift-lid"></span>
+            <span class="gift-body"></span>
+          </span>
+          打开礼物
+        </button>
+      </div>
+    </section>
+
+    <main class="page" id="page" aria-hidden="true">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="soft-label">HAPPY BIRTHDAY</p>
+          <div class="countdown" id="countdown">3</div>
+          <h2 id="heroTitle">生日快乐，我最爱的女孩</h2>
+          <p>
+            这一页，是我把想说的话、想收藏的回忆、想给你的温柔，悄悄放在一起做成的小宇宙。
+          </p>
+          <a class="primary-link" href="#letter">去收下我的告白</a>
+        </div>
+        <div class="cake-scene" aria-label="生日蛋糕插画">
+          <div class="balloon balloon-one"></div>
+          <div class="balloon balloon-two"></div>
+          <div class="cake">
+            <span class="flame"></span>
+            <span class="candle"></span>
+            <span class="cake-top"></span>
+            <span class="cake-mid"></span>
+            <span class="cake-bottom"></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section memories" id="memories">
+        <div class="section-heading">
+          <p class="soft-label">OUR MOMENTS</p>
+          <h2>一些我想一直收藏的瞬间</h2>
+        </div>
+        <div class="memory-list">
+          <article class="memory-card reveal">
+            <span>第一次心动</span>
+            <h3>你笑起来的时候，世界忽然亮了一点</h3>
+            <p>也许那天并没有发生什么惊天动地的事，但我记得自己偷偷开心了很久。</p>
+          </article>
+          <article class="memory-card reveal">
+            <span>平凡日常</span>
+            <h3>和你一起浪费时间，也很值得</h3>
+            <p>吃饭、散步、聊天、发呆，那些普通时刻，因为有你，都变成了纪念日。</p>
+          </article>
+          <article class="memory-card reveal">
+            <span>未来预告</span>
+            <h3>我还想陪你过很多很多生日</h3>
+            <p>新的一岁，愿你被爱、被珍惜、被温柔以待。而我，会继续认真地喜欢你。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section gallery-section">
+        <div class="section-heading">
+          <p class="soft-label">PHOTO WALL</p>
+          <h2>这里先放六张我们的回忆</h2>
+          <p>之后可以把这些占位照片换成你们真实的合照，惊喜感会直接翻倍。</p>
+        </div>
+        <div class="photo-wall" id="photoWall">
+          <button class="photo-card reveal" type="button" data-note="这一天，我记得你眼睛里有光。">
+            <span class="photo-gradient sunset"></span>
+            <strong>甜甜的一天</strong>
+          </button>
+          <button class="photo-card reveal" type="button" data-note="和你走过的路，都像被加了滤镜。">
+            <span class="photo-gradient sky"></span>
+            <strong>一起散步</strong>
+          </button>
+          <button class="photo-card reveal" type="button" data-note="你认真吃东西的样子，也很可爱。">
+            <span class="photo-gradient cream"></span>
+            <strong>好好吃饭</strong>
+          </button>
+          <button class="photo-card reveal" type="button" data-note="有你的地方，就是我最喜欢去的地方。">
+            <span class="photo-gradient rose"></span>
+            <strong>小小旅行</strong>
+          </button>
+          <button class="photo-card reveal" type="button" data-note="谢谢你把普通日子变得闪闪发光。">
+            <span class="photo-gradient night"></span>
+            <strong>晚风和你</strong>
+          </button>
+          <button class="photo-card reveal" type="button" data-note="下一张照片，也想和你一起拍。">
+            <span class="photo-gradient mint"></span>
+            <strong>未完待续</strong>
+          </button>
+        </div>
+      </section>
+
+      <section class="letter-section" id="letter">
+        <div class="letter-paper reveal">
+          <p class="soft-label">LOVE LETTER</p>
+          <h2>写给今天的你</h2>
+          <p class="typed-text" id="typedText"></p>
+        </div>
+      </section>
+
+      <section class="final-section" id="final">
+        <div class="final-card reveal">
+          <p class="soft-label">FINAL SURPRISE</p>
+          <h2>领取最后一个惊喜</h2>
+          <p>点一下，整片星光都替我祝你生日快乐。</p>
+          <button class="primary-link final-button" type="button" id="finalButton">点亮惊喜</button>
+          <div class="final-message" id="finalMessage">
+            <strong>生日快乐，我的宝贝</strong>
+            <span>愿你的每一岁都自由、明亮、被爱包围。也愿我每一年都在你身边。</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="note-dialog" id="noteDialog">
+      <p id="noteText"></p>
+      <button type="button" id="closeNote">收下这句</button>
+    </dialog>
+
+    <script src="script.js"></script>
+  </body>
+</html>
