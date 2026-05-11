@@ -53,9 +53,9 @@ a {
   overflow: hidden;
   padding: 24px;
   background:
-    radial-gradient(circle at 20% 18%, rgba(255, 143, 179, 0.36), transparent 28%),
-    radial-gradient(circle at 82% 18%, rgba(246, 199, 107, 0.28), transparent 24%),
-    linear-gradient(145deg, #111936 0%, #35213f 54%, #6a294a 100%);
+    radial-gradient(circle at 50% 62%, rgba(245, 76, 146, 0.24), transparent 36%),
+    radial-gradient(circle at 50% 45%, rgba(255, 166, 204, 0.12), transparent 22%),
+    linear-gradient(180deg, #030304 0%, #09070d 55%, #130a15 100%);
   color: #fffaf5;
   transition: opacity 800ms ease, visibility 800ms ease;
 }
@@ -66,8 +66,8 @@ a {
   z-index: 2;
   content: "";
   background:
-    radial-gradient(circle at 50% 45%, transparent 0%, rgba(17, 25, 54, 0.08) 34%, rgba(17, 25, 54, 0.58) 100%),
-    linear-gradient(180deg, rgba(17, 25, 54, 0.12), rgba(106, 41, 74, 0.22));
+    radial-gradient(circle at 50% 45%, rgba(255, 152, 196, 0.06) 0%, rgba(3, 3, 4, 0.2) 42%, rgba(3, 3, 4, 0.72) 100%),
+    linear-gradient(180deg, rgba(3, 3, 4, 0.04), rgba(3, 3, 4, 0.42));
   pointer-events: none;
 }
 
@@ -81,6 +81,7 @@ a {
   z-index: 3;
   width: min(100%, 720px);
   text-align: center;
+  transform: translateY(24vh);
 }
 
 .soft-label {
@@ -124,8 +125,8 @@ h3 {
 .cover-copy {
   margin: 22px auto 34px;
   max-width: 520px;
-  color: rgba(255, 250, 245, 0.82);
-  font-size: 18px;
+  color: rgba(255, 250, 245, 0.72);
+  font-size: 16px;
 }
 
 .gift-button,
@@ -141,7 +142,7 @@ h3 {
   background: linear-gradient(135deg, var(--rose), var(--gold));
   color: #ffffff;
   font-weight: 900;
-  box-shadow: 0 16px 34px rgba(239, 93, 143, 0.35);
+  box-shadow: 0 12px 26px rgba(239, 93, 143, 0.32);
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
@@ -193,7 +194,7 @@ h3 {
     radial-gradient(circle, rgba(246, 199, 107, 0.85) 1px, transparent 1.5px);
   background-position: 0 0, 42px 72px;
   background-size: 120px 120px, 160px 160px;
-  animation: twinkle 5s ease-in-out infinite alternate;
+  animation: twinkle 6s ease-in-out infinite alternate;
 }
 
 .heart-tunnel {
@@ -202,8 +203,8 @@ h3 {
   z-index: 1;
   width: 100%;
   height: 100%;
-  opacity: 0.96;
-  filter: drop-shadow(0 0 18px rgba(255, 143, 179, 0.35));
+  opacity: 1;
+  filter: drop-shadow(0 0 28px rgba(255, 143, 179, 0.46));
 }
 
 .stars::before {
