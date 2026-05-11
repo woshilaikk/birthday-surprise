@@ -3,6 +3,10 @@ const page = document.querySelector("#page");
 const openGift = document.querySelector("#openGift");
 const countdown = document.querySelector("#countdown");
 const heroTitle = document.querySelector("#heroTitle");
+const daysTogether = document.querySelector("#daysTogether");
+const hoursTogether = document.querySelector("#hoursTogether");
+const minutesTogether = document.querySelector("#minutesTogether");
+const secondsTogether = document.querySelector("#secondsTogether");
 const typedText = document.querySelector("#typedText");
 const finalButton = document.querySelector("#finalButton");
 const finalMessage = document.querySelector("#finalMessage");
@@ -22,6 +26,10 @@ let musicTimer;
 let isMusicPlaying = false;
 let particles = [];
 let tunnelTime = 0;
+const loveStart = new Date("2025-01-09T00:00:00+08:00").getTime();
+const romanticSong = new Audio("assets/music/faded.mp3");
+romanticSong.loop = true;
+romanticSong.preload = "auto";
 
 const tunnelHearts = Array.from({ length: 58 }, (_, index) => ({
   angle: index * 0.68,
@@ -49,6 +57,8 @@ function openSurprise() {
   page.setAttribute("aria-hidden", "false");
   launchPetals(36);
   runCountdown();
+  updateLoveTimer();
+  setInterval(updateLoveTimer, 1000);
   setTimeout(() => document.querySelector(".hero").scrollIntoView({ behavior: "smooth" }), 500);
 }
 
@@ -62,10 +72,23 @@ function runCountdown() {
       return;
     }
     clearInterval(timer);
-    countdown.textContent = "心动";
-    heroTitle.textContent = "生日快乐，我最爱的女孩";
+    countdown.textContent = "盛开";
+    heroTitle.textContent = "和宝宝在一起的时间";
     typeLetter();
   }, 900);
+}
+
+function updateLoveTimer() {
+  const elapsed = Math.max(0, Math.floor((Date.now() - loveStart) / 1000));
+  const days = Math.floor(elapsed / 86400);
+  const hours = Math.floor((elapsed % 86400) / 3600);
+  const minutes = Math.floor((elapsed % 3600) / 60);
+  const seconds = elapsed % 60;
+
+  daysTogether.textContent = days;
+  hoursTogether.textContent = hours;
+  minutesTogether.textContent = minutes;
+  secondsTogether.textContent = seconds;
 }
 
 function typeLetter() {
@@ -194,6 +217,14 @@ function animateFireworks() {
 }
 
 function playSoftMusic() {
+  romanticSong.currentTime = romanticSong.currentTime || 0;
+  romanticSong.play().catch(() => {
+    playGeneratedMelody();
+  });
+}
+
+function playGeneratedMelody() {
+  if (musicTimer) return;
   const AudioEngine = window.AudioContext || window.webkitAudioContext;
   if (!AudioEngine) {
     musicText.textContent = "音乐不可用";
@@ -221,6 +252,7 @@ function playSoftMusic() {
 }
 
 function stopSoftMusic() {
+  romanticSong.pause();
   clearInterval(musicTimer);
   musicTimer = null;
 }
