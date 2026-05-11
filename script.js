@@ -26,7 +26,8 @@ let musicTimer;
 let isMusicPlaying = false;
 let particles = [];
 let tunnelTime = 0;
-const loveStart = new Date("2025-01-09T00:00:00+08:00").getTime();
+let loveTimerId;
+const loveStart = new Date(2025, 0, 9, 0, 0, 0).getTime();
 const romanticSong = new Audio("assets/music/faded.mp3");
 romanticSong.loop = true;
 romanticSong.preload = "auto";
@@ -57,8 +58,7 @@ function openSurprise() {
   page.setAttribute("aria-hidden", "false");
   launchPetals(36);
   runCountdown();
-  updateLoveTimer();
-  setInterval(updateLoveTimer, 1000);
+  startLoveTimer();
   setTimeout(() => document.querySelector(".hero").scrollIntoView({ behavior: "smooth" }), 500);
 }
 
@@ -89,6 +89,13 @@ function updateLoveTimer() {
   hoursTogether.textContent = hours;
   minutesTogether.textContent = minutes;
   secondsTogether.textContent = seconds;
+}
+
+function startLoveTimer() {
+  updateLoveTimer();
+  if (!loveTimerId) {
+    loveTimerId = setInterval(updateLoveTimer, 1000);
+  }
 }
 
 function typeLetter() {
@@ -300,5 +307,6 @@ document.querySelectorAll(".reveal").forEach((element) => observer.observe(eleme
 window.addEventListener("resize", resizeAllCanvases);
 
 resizeAllCanvases();
+startLoveTimer();
 animateHeartTunnel();
 animateFireworks();
