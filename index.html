@@ -191,6 +191,72 @@
           </div>
         </div>
       </section>
+
+      <section class="reverse-game-section" id="reverseGame">
+        <div class="game-panel reveal">
+          <p class="soft-label">HIDDEN GAME</p>
+          <h2>反向操作挑战</h2>
+          <p class="game-intro">上下左右全都反过来，躲开障碍走到终点。失败扣1条命，每天只补1条命，上限52。</p>
+          <div class="game-stats">
+            <span>今日生命：<strong id="gameLives">0</strong></span>
+            <span class="game-timer" id="gameTimer">--</span><span id="gameStatus">准备开始</span>
+          </div>
+          <div class="game-level-select" id="reverseLevelSelect"><span>关卡：</span></div><div class="game-arena" id="gameArena" aria-label="反向操作挑战游戏区域">
+            <div class="game-goal" id="gameGoal">终点</div>
+            <div class="game-player" id="gamePlayer" aria-hidden="true"></div>
+          </div>
+          <div class="game-controls" aria-label="方向控制">
+            <button type="button" data-move="up">↑</button>
+            <button type="button" data-move="left">←</button>
+            <button type="button" data-move="down">↓</button>
+            <button type="button" data-move="right">→</button>
+          </div>
+          <button class="primary-link game-start" type="button" id="gameStart">开始挑战</button>
+          <div class="next-page-card locked" id="nextPageCard">
+            <span>LOCKED PAGE</span>
+            <strong>通关后解锁下一关</strong>
+            <p>反向操作成功到达终点后，这里会打开推箱子挑战。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="sokoban-section" id="sokoban" aria-hidden="true">
+        <div class="sokoban-panel reveal">
+          <p class="soft-label">BONUS GAME</p>
+          <h2>推箱子挑战</h2>
+          <p class="game-intro">把所有箱子推到目标点上，方向键控制小人移动。需要提示？点下方求助按钮三次试试。</p>
+          <div class="sokoban-stats">
+            <span>步数：<strong id="sokobanSteps">0</strong></span>
+            <span>推箱：<strong id="sokobanPushes">0</strong></span>
+            <span id="sokobanStatus">准备开始</span>
+          </div>
+          <div class="sokoban-hint" id="sokobanHint">
+            <strong>通关提示</strong>
+            <p>优先推角落的箱子，用小人绕到箱子侧面推。关键步：先推左上角的箱子到目标。</p>
+          </div>
+          <button class="primary-link sokoban-hint-btn" type="button" id="sokobanHintBtn">
+            求助（点3次获得提示）
+          </button>
+          <div class="sokoban-level-select" id="sokobanLevelSelect">
+            <span>关卡：</span>
+          </div>
+          <div class="sokoban-board" id="sokobanBoard" aria-label="推箱子游戏区域"></div>
+          <div class="sokoban-controls" aria-label="方向控制">
+            <button type="button" data-sokodir="up">▲</button>
+            <button type="button" data-sokodir="left">◀</button>
+            <button type="button" data-sokodir="down">▼</button>
+            <button type="button" data-sokodir="right">▶</button>
+          </div>
+          <div class="sokoban-actions">
+            <button class="primary-link sokoban-undo-btn" type="button" id="sokobanUndo">撤销 (Ctrl+Z)</button><button class="primary-link" type="button" id="sokobanReset">重置关卡</button>
+          </div>
+          <div class="sokoban-win" id="sokobanWin">
+            <strong>通关成功！</strong>
+            <span>你真是个天才！所有箱子都归位啦～</span>
+            <em>用了 <span id="sokobanWinSteps">0</span> 步，再来挑战更少步数吧</em>
+          </div>
+        </div>
+      </section>
     </main>
 
     <dialog class="note-dialog" id="noteDialog">
